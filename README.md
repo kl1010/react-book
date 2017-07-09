@@ -5,9 +5,9 @@ React App to search books and to add it in Currently Reading ot Want to Read or 
 Download the project<br>
 ``` cd ``` <br>
 into the directory <br>
-``` npm install ```<br>
+``` npm install ``` to install all the dependencies <br>
 and <br>
- ``` npm start ```
+ ``` npm start ``` to start the project
 
 ## Resources used
 
