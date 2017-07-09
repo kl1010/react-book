@@ -1,0 +1,22 @@
+@font-face{
+  font-family:bleeding;
+  src:url(../fonts/BC.ttf)
+}
+.kp-search {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+}
+.kp-bottom {
+  position: fixed;
+  bottom: 25px;
+}
+.kp-satisfy{
+  font-family: 'Satisfy', cursive;
+}
+.kp-bleeding{
+  font-family:bleeding;
+}
+a{
+  text-decoration: none;
+}
