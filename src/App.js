@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Route} from 'react-router-dom';
+import _ from 'lodash';
 import * as BooksAPI from './BooksAPI'
 import Header from './components/Header';
 import CurrentlyReading from './components/CurrentlyReading';
@@ -11,58 +12,46 @@ import SearchBooks from './components/SearchBooks';
 class App extends Component {
 
 state ={
-      read:[],
-      currentlyReading:[],
-      wantToRead:[],
-      search:[]
+      search:[],
+      books:[]
     }
 
-
-  moveBooks = (book,shelf)=>{
-    BooksAPI.update(book,shelf)
-    this.getAll()
+  moveBook = (book,shelf)=>{
+    BooksAPI.update(book, shelf).then(() => {
+          book.shelf = shelf
+          this.setState(state => ({
+            books: state.books.filter(b => b.id !== book.id).concat([ book ])
+          }))
+        })
     }
 
   searchBooks = (query)=>{
     if(query !== ""){
       BooksAPI.search(query).then((data)=>{
         try{
-          this.setState({search:data})
-        } catch(e){
-            this.setState({search:[]})
-            console.log("No result Found")
+          console.log(data)
+        }catch(e){
+          console.log("No results", e)
         }
       })
-    } else{
-      this.setState({search:[]})
-    }
-  }
+    }}
 
-  getAll =()=>{
-    BooksAPI.getAll().then((data) => {
-      const al = data.filter((book)=>book.shelf ==='read')
-      const cr = data.filter((book)=>book.shelf ==='currentlyReading')
-      const wr = data.filter((book)=>book.shelf ==='wantToRead')
-      this.setState({read:al})
-      this.setState({currentlyReading:cr})
-      this.setState({wantToRead:wr})
-    })
-  }
   componentDidMount() {
-    this.getAll()
+    BooksAPI.getAll().then((data) => {
+      this.setState({books:data})
+    })
 }
   render() {
-    const {read,currentlyReading,wantToRead,search}=this.state
+    const {books,search}=this.state
     return (
       <div className="App">
-
+        <Header />
         <Route exact path = "/" render={()=>(
           <div>
-            <Header />
 
-            <CurrentlyReading books ={currentlyReading} onMove = {this.moveBooks} />
-            <WantToRead books ={wantToRead} onMove = {this.moveBooks} />
-            <AlreadyRead books ={read} onMove = {this.moveBooks} />
+            <CurrentlyReading books ={books.filter((book)=>book.shelf ==='currentlyReading')} onMove = {this.moveBook} />
+            <WantToRead books ={books.filter((book)=>book.shelf ==='wantToRead')} onMove = {this.moveBook} />
+            <AlreadyRead books ={books.filter((book)=>book.shelf ==='read')} onMove = {this.moveBook} />
 
             <Footer />
           </div>
@@ -70,8 +59,7 @@ state ={
 
           <Route path ="/search" render={({history})=>(
             <div>
-              <Header />
-              <SearchBooks searchResults={search} onSearch = {this.searchBooks} onMove = {this.moveBooks}/>
+              <SearchBooks books={search} onSearch = {this.searchBooks} onMove = {this.moveBook}/>
             </div>
           )} />
 
@@ -79,5 +67,6 @@ state ={
     );
   }
 }
+
 
 export default App;

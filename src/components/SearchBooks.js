@@ -1,12 +1,14 @@
 import React,{ Component } from 'react';
 import { Link } from 'react-router-dom';
+import Spinner from './Spinner';
+import BookListItem from './BookListItem';
 
 class SearchBooks extends Component {
   state = {
     query : "",
   }
 
-  updateQuery =(query)=>{
+updateQuery =(query)=>{
     this.props.onSearch(query)
   if(query !== ""){
     this.setState({query: query.trim()})
@@ -14,15 +16,10 @@ class SearchBooks extends Component {
     this.setState({query: ""})
   }
 }
-handleChange = (selected,book) => {
-   this.props.onMove(book,selected)
- }
-
-
 
   render(){
     const {query } = this.state
-    const {searchResults} = this.props
+    const {books,onMove} = this.props
 
 
     return (
@@ -36,33 +33,11 @@ handleChange = (selected,book) => {
 
         <div className="bookshelf-books">
           <ol className="books-grid">
-          {searchResults.length ===0 && query !== ""&&(
-            <div className="spinner">
-              <div className="rect1"></div>
-              <div className="rect2"></div>
-              <div className="rect3"></div>
-              <div className="rect4"></div>
-              <div className="rect5"></div>
-            </div>
+          {books.length ===0 && query !== ""&&(
+            <Spinner />
           )}
-            {searchResults.length > 0 && searchResults.map((book)=>
-              <li key={book.id}>
-                  <div className="book" >
-                    <div className="book-top">
-                      <div className="book-cover w3-hover-shadow" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                      <div className="book-shelf-changer">
-  											<select value={book.shelf} onChange={(event)=>this.handleChange(event.target.value,book)}>
-  												<option value="none" disabled>Move to...</option>
-  												<option value="currentlyReading">Currently Reading</option>
-  												<option value="wantToRead">Want to Read</option>
-  												<option value="read">Read</option>
-  												<option value="none">None</option>
-  											</select>
-  										</div>
-                    </div>
-                    <div className="book-title">{book.title}</div>
-                  </div>
-                </li>
+            {books.length > 0 && books.map((book)=>
+              <BookListItem key = {book.id} book ={book} onMove = {onMove}/>
             )}
         </ol>
         </div>
