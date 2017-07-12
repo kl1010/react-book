@@ -7,25 +7,27 @@ class CurrentlyReading extends Component {
   render() {
     const {books,onMove} = this.props
     return (
-      <div className="w3-container">
 
-        <div className = " w3-panel w3-bottombar w3-border-green ">
-          <h3 className = "kp-satisfy">Currently Reading</h3>
-        </div>
+<div className="w3-container">
+	<div className = " w3-panel w3-bottombar w3-border-green ">
+		<h3 className = "kp-satisfy">Currently Reading</h3>
+	</div>
 
         {books.length ===0 &&(
-          <Spinner />
+
+	<Spinner />
         )}
 
-        <div className="bookshelf-books">
-        <ol className="books-grid">
-          {books.map((book)=>
-            <BookListItem key = {book.id} book ={book} onMove = {onMove}/>
-          )}
-        </ol>
-      </div>
 
-      </div>
+	<div className="bookshelf-books">
+		<ol className="books-grid">
+          {books.map((book)=>
+			<BookListItem key = {book.id} book ={book} onMove = {onMove}/>
+          )}
+
+		</ol>
+	</div>
+</div>
     );
   }
 }

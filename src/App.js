@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Route} from 'react-router-dom';
-import _ from 'lodash';
 import * as BooksAPI from './BooksAPI'
 import Header from './components/Header';
 import CurrentlyReading from './components/CurrentlyReading';
@@ -12,7 +11,6 @@ import SearchBooks from './components/SearchBooks';
 class App extends Component {
 
 state ={
-      search:[],
       books:[]
     }
 
@@ -24,46 +22,33 @@ state ={
           }))
         })
     }
-
-  searchBooks = (query)=>{
-    if(query !== ""){
-      BooksAPI.search(query).then((data)=>{
-        try{
-          console.log(data)
-        }catch(e){
-          console.log("No results", e)
-        }
-      })
-    }}
-
   componentDidMount() {
     BooksAPI.getAll().then((data) => {
       this.setState({books:data})
     })
 }
   render() {
-    const {books,search}=this.state
+    const {books}=this.state
     return (
-      <div className="App">
-        <Header />
-        <Route exact path = "/" render={()=>(
-          <div>
 
-            <CurrentlyReading books ={books.filter((book)=>book.shelf ==='currentlyReading')} onMove = {this.moveBook} />
-            <WantToRead books ={books.filter((book)=>book.shelf ==='wantToRead')} onMove = {this.moveBook} />
-            <AlreadyRead books ={books.filter((book)=>book.shelf ==='read')} onMove = {this.moveBook} />
+<div className="App">
+	<Header />
+	<Route exact path = "/" render={()=>(
 
-            <Footer />
-          </div>
+		<div>
+			<CurrentlyReading books ={books.filter((book)=>book.shelf ==='currentlyReading')} onMove = {this.moveBook} />
+			<WantToRead books ={books.filter((book)=>book.shelf ==='wantToRead')} onMove = {this.moveBook} />
+			<AlreadyRead books ={books.filter((book)=>book.shelf ==='read')} onMove = {this.moveBook} />
+			<Footer />
+		</div>
         )} />
+		<Route path ="/search" render={({history})=>(
 
-          <Route path ="/search" render={({history})=>(
-            <div>
-              <SearchBooks books={search} onSearch = {this.searchBooks} onMove = {this.moveBook}/>
-            </div>
+			<div>
+				<SearchBooks books={books}  onMove = {this.moveBook} />
+			</div>
           )} />
-
-      </div>
+		</div>
     );
   }
 }
