@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import BookListItem from './BookListItem';
 import Spinner from './Spinner';
+import PropTypes from 'prop-types';
 
 class AlreadyRead extends Component {
-
+  static propTypes = {
+      books: PropTypes.array.isRequired,
+      onMove: PropTypes.func.isRequired
+    }
 
   render() {
     const {books,onMove} = this.props
