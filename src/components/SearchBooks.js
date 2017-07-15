@@ -45,10 +45,10 @@ onSearch = (query)=>{
 updateQuery =(query)=>{
   if(query){
     this.setState({query: query})
+    this.onSearch(query)
   }else{
     this.setState({query: ""})
   }
-    this.onSearch(query)
 }
 
   render(){
@@ -69,9 +69,9 @@ updateQuery =(query)=>{
           {books.length ===0 && query !== ""&&(
             <Spinner />
           )}
-          {error === true && query.length > 0 &&(
-            <div className="w3-panel w3-red w3-padding w3-card">
-            <h3>No results Found, please use different Keyword</h3>
+          {error === true && query.length > 2 &&(
+            <div className="w3-panel w3-yellow w3-card">
+            <p>No results Found, please try a different Keyword</p>
             </div>
           )}
             {searchResults.length > 0 && searchResults.map((book)=>
